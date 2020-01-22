@@ -1,25 +1,58 @@
-# nova-patches
+# Laravel Rot Ebal Nova Patches
 A set of patches that fix bugs and improve the functionality of Laravel Nova.
 
-# Depends on the package vaimo/composer-patches
+Currently developed, compatible and tested with Nova 2.9.3.
+
+
+## Installation
+
+You can install the package in to a Laravel app that uses Nova via composer:
+
+```bash
+composer require laravelrotebal/nova-patches
+```
+
+All patches will be applied automatically!
+
+
+## Why is this package needed?
+
+- [x] Core bug fixes.
+- [x] Core improved functioning.
+- [x] Core smell code correction.
+- [x] More flexible core code for best practices.
+
+
+## TODO
+
+- [ ] Manually choose which patches to apply.
+- [ ] Automatically rebuild and publish frontend resources.
+- [ ] Or find a way to make patches for frontend compiled resources.
+- [ ] Create tests for testing patched functionality.
+- [ ] Compatible with other versions of Nova.
+- [ ] Uniform naming of patches.
+
+
+## Depends on the package vaimo/composer-patches
 
 Applies a patch from a local or remote file to any package that is part of a given composer project. Patches can be defined both on project and on package level. Optional support for patch versioning, sequencing, custom patch applier configuration and composer command for testing/troubleshooting patches.
 
-# How it works
+
+## How it works
 
 Directory `patches/laravel/nova` contains patch files. One patch file for one bugfix or feature improvement.
 
-Section `$.extra.patches.laravel/nova` in `composer.json` contains the paths to the patch files to be applied in the specified order.
+Section `$.extra.patches.laravel/nova` in `composer.json` contains the patch files to be applied in the specified order.
 
-After run `install`, `require`, `update`, `patch:redo`, `patch:undo` commands of `composer` the specified patches will be applied to the specified packages in the vendor directory.
+After run `install`, `require`, `update`, `patch:redo`, `patch:undo` commands of `composer` the specified patches will be applied to the specified packages in the `vendor` directory.
 
 Some patches may modify the source files for the frontend. Which will require manual start of the assembly of resources and possibly their publication.
 
 
-# Patch list
+## Patch list
 
 
-## refactoring-reformat-fields-js.patch
+### refactoring-reformat-fields-js.patch
 
 Change the format to simplify the applying of patches.
 
@@ -30,7 +63,7 @@ Affected files:
 Need rebuild frontend: no
 
 
-## has-many-index-template.patch
+### has-many-index-template.patch
 
 HasManyField can be displayed in the index.
 
@@ -43,7 +76,7 @@ Affected files:
 Need rebuild frontend: yes
 
 
-## has-one-index-template.patch
+### has-one-index-template.patch
 
 HasOneField can be displayed in the index.
 
@@ -56,7 +89,7 @@ Affected files:
 Need rebuild frontend: yes
 
 
-## action-event-cli-compatible.patch
+### action-event-cli-compatible.patch
 
 forAttachedResource(), forAttachedResourceUpdate() of ActionEvent independent of NovaRequest.
 
@@ -70,7 +103,7 @@ Affected files:
 Need rebuild frontend: no
 
 
-## fix-resource-detach.patch
+### fix-resource-detach.patch
 
 ActionEvent::forResourceDetach() can do mass detachment.
 
@@ -82,7 +115,7 @@ Affected files:
 Need rebuild frontend: no
 
 
-## action-event-create-without-duplicates.patch
+### action-event-create-without-duplicates.patch
 
 ActionEvent::forResourceCreate() will not duplicate creation events.
 
@@ -93,7 +126,7 @@ Affected files:
 Need rebuild frontend: no 
 
 
-# How to rebuild frontend
+## How to rebuild frontend
 
 Go to `laravel/nova` directory and execute:
 
