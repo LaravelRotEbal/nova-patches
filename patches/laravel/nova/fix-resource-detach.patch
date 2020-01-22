@@ -1,0 +1,68 @@
+@package laravel/nova
+
+--- src/Actions/ActionEvent.php	(date 1577461913271)
++++ src/Actions/ActionEvent.php	(date 1577461913271)
+@@ -240,14 +240,14 @@
+      * @param  \Illuminate\Contracts\Auth\Authenticatable  $user
+      * @param  \Illuminate\Database\Eloquent\Model  $parent
+      * @param  \Illuminate\Support\Collection  $models
+-     * @param  string  $pivotClass
++     * @param  \Illuminate\Database\Eloquent\Model  $pivots
+      * @return \Illuminate\Support\Collection
+      */
+-    public static function forResourceDetach($user, $parent, Collection $models, $pivotClass)
++    public static function forResourceDetach($user, $parent, Collection $models, Collection $pivots)
+     {
+         $batchId = (string) Str::orderedUuid();
+
+-        return $models->map(function ($model) use ($user, $parent, $pivotClass, $batchId) {
++        return $models->map(function ($model, $key) use ($user, $parent, $pivots, $batchId) {
+             return new static([
+                 'batch_id' => $batchId,
+                 'user_id' => $user->getAuthIdentifier(),
+@@ -256,8 +256,8 @@
+                 'actionable_id' => $parent->getKey(),
+                 'target_type' => $model->getMorphClass(),
+                 'target_id' => $model->getKey(),
+-                'model_type' => $pivotClass,
+-                'model_id' => null,
++                'model_type' => $pivots[$key]->getMorphClass(),
++                'model_id' => $pivots[$key]->getKey(),
+                 'fields' => '',
+                 'original' => null,
+                 'changes' => null,
+
+--- src/Http/Controllers/ResourceDetachController.php	(date 1577461877647)
++++ src/Http/Controllers/ResourceDetachController.php	(date 1577461877647)
+@@ -22,6 +22,8 @@
+         $request->chunks(150, function ($models) use ($request) {
+             $parent = $request->findParentModelOrFail();
+
++            $pairs = [];
++
+             foreach ($models as $model) {
+                 $this->deletePivotFields(
+                     $request, $resource = $request->newResourceWith($model),
+@@ -30,12 +32,16 @@
+
+                 $pivot->delete();
+
+-                DB::table('action_events')->insert(
+-                    ActionEvent::forResourceDetach(
+-                        $request->user(), $parent, collect([$model]), $pivot->getMorphClass()
+-                    )->map->getAttributes()->all()
+-                );
+-            }
++                $pairs[] = ['model' => $model, 'pivot' => $pivot];
++            }
++
++            $pairs = collect($pairs);
++
++            DB::table('action_events')->insert(
++                ActionEvent::forResourceDetach(
++                    $request->user(), $parent, $pairs->pluck('model'), $pairs->pluck('pivot')
++                )->map->getAttributes()->all()
++            );
+         });
+     }
+

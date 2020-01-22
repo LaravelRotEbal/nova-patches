@@ -1,0 +1,29 @@
+{
+    "name": "laravelrotebal/nova-patches",
+    "description": "A set of patches that fix bugs and improve the functionality of Laravel Nova.",
+    "authors": [
+        {
+            "name": "Krot Eval",
+            "email": "38257723+4n70w4@users.noreply.github.com"
+        }
+    ],
+    "require": {
+        "laravel/nova": "2.9.3",
+        "vaimo/composer-patches": "^4.20"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-master"
+    },
+    "extra": {
+        "patches": {
+            "laravel/nova": [
+                "patches/laravel/nova/refactoring-reformat-fields-js.patch",
+                "patches/laravel/nova/has-one-index-template.patch",
+                "patches/laravel/nova/has-many-index-template.patch",
+                "patches/laravel/nova/action-event-cli-compatible.patch",
+                "patches/laravel/nova/fix-resource-detach.patch",
+                "patches/laravel/nova/action-event-create-without-duplicates.patch"
+            ]
+        }
+    }
+}

@@ -1,0 +1,22 @@
+@package laravel/nova
+
+--- src/Actions/ActionEvent.php	(date 1577373083904)
++++ src/Actions/ActionEvent.php	(date 1577373083904)
+@@ -62,6 +62,17 @@
+      */
+     public static function forResourceCreate($user, $model)
+     {
++        static $already = [];
++
++        $key = get_class($model).$model->getKey();
++
++        if(isset($already[$key]) ) {
++            $fixture = new class { public function save() {} };
++            return $fixture;
++        }
++
++        $already[$key] = $user;
++
+         return new static([
+             'batch_id' => (string) Str::orderedUuid(),
+             'user_id' => $user->getAuthIdentifier(),

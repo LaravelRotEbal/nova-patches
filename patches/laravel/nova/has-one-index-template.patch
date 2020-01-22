@@ -1,0 +1,94 @@
+@package laravel/nova
+
+--- /dev/null
++++ resources/js/components/Index/HasOneField.vue
+@@ -0,0 +1,24 @@
++<template>
++  <div :class="`text-${field.textAlign}`">
++    <template v-if="hasValue">
++      <div v-if="field.asHtml" v-html="field.value"></div>
++      <span v-else class="whitespace-no-wrap">{{ field.value }}</span>
++    </template>
++    <p v-else>&mdash;</p>
++  </div>
++</template>
++
++<script>
++export default {
++  props: ['resourceName', 'field'],
++
++  computed: {
++    /**
++     * Determine if the field has a value other than null.
++     */
++    hasValue() {
++      return this.field.value !== null
++    },
++  },
++}
++</script>
+
+--- resources/js/fields.js	(date 1579516460910)
++++ /resources/js/fields.js	(date 1579516460910)
+@@ -91,6 +91,7 @@
+
+ // Has One Field...
+ Vue.component('detail-has-one-field', require('./components/Detail/HasOneField.vue'))
++Vue.component('index-has-one-field', require('./components/Index/HasOneField.vue'))
+
+ // Has Many Field...
+ Vue.component('detail-has-many-field', require('./components/Detail/HasManyField.vue'))
+
+--- src/Fields/HasOne.php	(date 1579512811709)
++++ src/Fields/HasOne.php	(date 1579512811709)
+@@ -114,4 +114,50 @@
+             'singularLabel' => $this->singularLabel,
+         ], parent::jsonSerialize());
+     }
++
++
++
++
++    /**
++     * @return \App\Fields\HasMany
++     */
++    public function indexNone() : self {
++        $this->displayCallback = null;
++
++        return $this;
++    }
++
++
++    /**
++     * @return self
++     */
++    public function indexCount(): self {
++        $this->displayCallback = static function (Model $value) {
++            if($value) {
++                return 1;
++            }
++
++            return 0;
++        };
++
++        return $this;
++    }
++
++
++
++    /**
++     * @param $column
++     *
++     * @return self
++     */
++    public function indexColumn($column): self {
++        $this->displayCallback = static function (Model $value) use ($column) {
++            return $value->$column;
++        };
++
++        return $this;
++    }
++
++
++
+ }
