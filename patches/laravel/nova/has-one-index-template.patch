@@ -50,7 +50,7 @@
 +
 +
 +    /**
-+     * @return \App\Fields\HasMany
++     * @return self
 +     */
 +    public function indexNone() : self {
 +        $this->displayCallback = null;

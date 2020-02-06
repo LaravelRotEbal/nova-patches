@@ -84,7 +84,7 @@ Affected files:
 
 - resources/js/components/Index/HasOneField.vue
 - resources/js/fields.js
-- src/Fields/HasMany.php
+- src/Fields/HasOne.php
 
 Need rebuild frontend: yes
 
