@@ -48,7 +48,7 @@
                  $pivot->delete();
 
 -                DB::table('action_events')->insert(
--                    ActionEvent::forResourceDetach(
+-                    Nova::actionEvent()->forResourceDetach(
 -                        $request->user(), $parent, collect([$model]), $pivot->getMorphClass()
 -                    )->map->getAttributes()->all()
 -                );
@@ -59,7 +59,7 @@
 +            $pairs = collect($pairs);
 +
 +            DB::table('action_events')->insert(
-+                ActionEvent::forResourceDetach(
++                Nova::actionEvent()->forResourceDetach(
 +                    $request->user(), $parent, $pairs->pluck('model'), $pairs->pluck('pivot')
 +                )->map->getAttributes()->all()
 +            );

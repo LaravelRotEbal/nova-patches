@@ -2,21 +2,13 @@
 
 --- src/Http/Controllers/AttachedResourceUpdateController.php	(date 1577352859767)
 +++ src/Http/Controllers/AttachedResourceUpdateController.php	(date 1577352859767)
-@@ -8,6 +8,7 @@
- use Illuminate\Support\Facades\Validator;
- use Laravel\Nova\Actions\ActionEvent;
- use Laravel\Nova\Http\Requests\NovaRequest;
-+use Laravel\Nova\Nova;
-
- class AttachedResourceUpdateController extends Controller
- {
 @@ -36,7 +37,8 @@
 
              [$pivot, $callbacks] = $resource::fillPivot($request, $model, $pivot);
 
--            ActionEvent::forAttachedResourceUpdate($request, $model, $pivot)->save();
+-            Nova::actionEvent()->forAttachedResourceUpdate($request, $model, $pivot)->save();
 +            $target = Nova::modelInstanceForKey($request->relatedResource)->find($pivot[$pivot->getRelatedKey()]);
-+            ActionEvent::forAttachedResourceUpdate($request->user(), $model, $target, $pivot)->save();
++            Nova::actionEvent()->forAttachedResourceUpdate($request->user(), $model, $target, $pivot)->save();
 
              $pivot->save();
 
@@ -27,32 +19,24 @@
              $pivot = $request->findPivotModel()
          )->save();
 
--        ActionEvent::forAttachedResourceUpdate(
+-        Nova::actionEvent()->forAttachedResourceUpdate(
 -            $request, $request->findModelOrFail(), $pivot
 -        )->save();
 +        $target = Nova::modelInstanceForKey($request->relatedResource)->find($pivot[$pivot->getRelatedKey()]);
-+        ActionEvent::forAttachedResourceUpdate($request->user(), $request->findModelOrFail(), $target, $pivot)->save();
++        Nova::actionEvent()->forAttachedResourceUpdate($request->user(), $request->findModelOrFail(), $target, $pivot)->save();
      }
  }
 
 
 --- src/Http/Controllers/ResourceAttachController.php	(date 1577353805001)
 +++ src/Http/Controllers/ResourceAttachController.php	(date 1577353805001)
-@@ -8,6 +8,7 @@
- use Illuminate\Support\Facades\Validator;
- use Laravel\Nova\Actions\ActionEvent;
- use Laravel\Nova\Http\Requests\NovaRequest;
-+use Laravel\Nova\Nova;
-
- class ResourceAttachController extends Controller
- {
 @@ -31,7 +32,8 @@
                  )
              );
 
--            ActionEvent::forAttachedResource($request, $model, $pivot)->save();
+-            Nova::actionEvent()->forAttachedResource($request, $model, $pivot)->save();
 +            $target = Nova::modelInstanceForKey($request->relatedResource)->find($pivot[$pivot->getRelatedKey()]);
-+            ActionEvent::forAttachedResource($request->user(), $model, $target, $pivot)->save();
++            Nova::actionEvent()->forAttachedResource($request->user(), $model, $target, $pivot)->save();
 
              $pivot->save();
 
