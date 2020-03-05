@@ -8,7 +8,7 @@
         }
     ],
     "require": {
-        "laravel/nova": "2.9.4||2.10.1||2.11.1",
+        "laravel/nova": "2.12.0",
         "vaimo/composer-patches": "^4.20"
     },
     "require-dev": {
