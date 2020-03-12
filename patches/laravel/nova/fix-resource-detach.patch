@@ -59,7 +59,7 @@
 +
 +            $pairs = collect($pairs);
 +
-+            tap(Nova::actionEvent(), function ($actionEvent) use ($pivot, $model, $parent, $request) {
++            tap(Nova::actionEvent(), function ($actionEvent) use ($pivot, $model, $parent, $request, $pairs) {
 +                DB::connection($actionEvent->getConnectionName())->table('action_events')->insert(
 +                    $actionEvent->forResourceDetach(
 +                        $request->user(), $parent, $pairs->pluck('model'), $pairs->pluck('pivot')
